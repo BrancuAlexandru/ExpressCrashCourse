@@ -2,6 +2,7 @@ let members = require("../../Members");
 const express = require("express");
 const uuid = require("uuid");
 const router = express.Router();
+const logger = require('../../middleware/logger');
 
 router.get("/", (req, res) => {
   res.json(members);
@@ -9,10 +10,7 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const memberExists =
-    members.filter((member) => member.id === parseInt(req.params.id)).length >=
-    1
-      ? true
-      : false;
+    members.filter((member) => member.id === parseInt(req.params.id)).length >= 1 ? true : false;
 
   if (memberExists) {
     res.json(members.filter((member) => member.id === parseInt(req.params.id)));
@@ -21,7 +19,7 @@ router.get("/:id", (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", logger, (req, res) => {
   const newMember = {
     id: uuid.v4(),
     name: req.body.name,
@@ -39,10 +37,7 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
   const memberExists =
-    members.filter((member) => member.id === parseInt(req.params.id)).length >=
-    1
-      ? true
-      : false;
+    members.filter((member) => member.id === parseInt(req.params.id)).length >= 1 ? true : false;
 
   if (memberExists) {
     const updatedMember = req.body;
@@ -61,11 +56,7 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const memberExists =
-    members.filter((member) => member.id === parseInt(req.params.id)).length >=
-    1
-      ? true
-      : false;
+  const memberExists = members.filter((member) => member.id === parseInt(req.params.id)).length >= 1 ? true : false;
 
   if (memberExists) {
     members = members.filter((member) => member.id !== parseInt(req.params.id));
