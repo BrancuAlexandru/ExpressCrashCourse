@@ -4,6 +4,13 @@ const path = require('path');
 
 const app = express();
 
+const logger = (req, res, next) => {
+  console.log(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+  next();
+}
+
+app.use(logger);
+
 app.get('/api/members', (req, res) => {res.json(members)});
 
 const PORT = 5000;
